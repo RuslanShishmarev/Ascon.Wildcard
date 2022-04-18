@@ -90,9 +90,9 @@ namespace Ascon.Wildcard.ViewModels
         #region METHODS
 
         private void GetWordsByPattern()
-        {
+        {            
             _wildcardSearcher.SetIsWithRegister(WithRegister);
-            ResultWords = _wildcardSearcher.SearchWords(UserPattern).ToList();
+            ResultWords = _wildcardSearcher.SearchWords(UserPattern)?.ToList();
         }
 
         private void SelectFile()

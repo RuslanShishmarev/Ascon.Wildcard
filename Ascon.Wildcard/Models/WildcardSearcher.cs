@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace Ascon.Wildcard.Models
 {
     public class WildcardSearcher : IWildcardSearcher
     {
+        public bool IsReady => !string.IsNullOrEmpty(Text);
+
         public string Text { get; private set; }
 
         public bool WithRegister { get; private set; }
@@ -44,7 +44,7 @@ namespace Ascon.Wildcard.Models
 
         public IEnumerable<string> SearchWords(string pattern)
         {
-            return UniqueWords.Where(x => IsWordEqualPattern(pattern, x));
+            return UniqueWords?.Where(x => IsWordEqualPattern(pattern, x));
         }
 
         private bool IsWordEqualPattern(string pattern, string word)
@@ -57,12 +57,17 @@ namespace Ascon.Wildcard.Models
             return match.Success;
         }
 
+        //private bool IsWordEqualPatternMy(string pattern, string word)
+        //{
+        //    if (!pattern.Contains('*') && !pattern.Contains('?')) return pattern == word;
+        //}
+
         private IEnumerable<string> GetUniqueWords(string text)
         {
             Regex reg = new Regex("[^a-zA-Zа-яА-Я]");
             string txt = reg.Replace(text, " ");
 
-            return txt.Split(' ').OrderBy(x => x).Distinct();
+            return txt.Split(' ').OrderBy(x => x).Where(x => x != string.Empty).Distinct();
         }
     }
 }

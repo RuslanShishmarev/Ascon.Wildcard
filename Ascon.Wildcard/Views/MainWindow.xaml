@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Ascon.Wildcard"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="Окно программы"
         Height="450" 
@@ -25,6 +26,12 @@
             <Setter Property="Foreground" Value="White"/>
         </Style>
         
+        <Style TargetType="TextBox" x:Key="commonTB">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+        
         <Style TargetType="TextBlock" x:Key="header">
             <Setter Property="HorizontalAlignment" Value="Center"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
@@ -37,6 +44,7 @@
         
         <Style TargetType="Button" x:Key="commonBtn">
             <Setter Property="Background" Value="{StaticResource commonOrange}"/>
+            <Setter Property="Cursor" Value="Hand"/>
         </Style>
         
         <Style TargetType="GridSplitter" x:Key="commonSplitter">
@@ -51,6 +59,7 @@
 
         <Style TargetType="CheckBox" x:Key="commonChB">
             <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Cursor" Value="Hand"/>
         </Style>
     </Window.Resources>
     <Grid>
@@ -101,7 +110,8 @@
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="Паттерн" Style="{StaticResource commonTxt}"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserPattern}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserPattern}" 
+                             Style="{StaticResource commonTB}"/>
 
                     <TextBlock Grid.Row="1" Text="Учитывать регистр" Style="{StaticResource commonTxt}"/>
                     <CheckBox  Grid.Row="1" Grid.Column="1" IsChecked="{Binding WithRegister}"
