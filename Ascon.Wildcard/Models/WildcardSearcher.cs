@@ -19,12 +19,22 @@ namespace Ascon.Wildcard.Models
         {
             Text = text;
             WithRegister = withRegister;
-            UniqueWords = GetUniqueWords(text, withRegister);
         }
 
-        public WildcardSearcher()
+        public WildcardSearcher(bool withRegister)
         {
+            WithRegister = withRegister;
+        }
 
+        public void SetIsWithRegister(bool withRegister)
+        {
+            WithRegister = withRegister;
+        }
+
+        public void SetText(string text)
+        {
+            Text = text;
+            UniqueWords = GetUniqueWords(text);
         }
 
         public void AddWord(string word)
@@ -41,20 +51,16 @@ namespace Ascon.Wildcard.Models
         {
             string patternForRegex = pattern.Replace("*", "\\" + "w*").Replace("?", ".");
 
-            Regex regex = new Regex(patternForRegex);
+            Regex regex = new Regex(patternForRegex, !WithRegister ? RegexOptions.IgnoreCase : RegexOptions.None);
             Match match = regex.Match(word);
 
             return match.Success;
         }
 
-        private IEnumerable<string> GetUniqueWords(string text, bool withRegister)
+        private IEnumerable<string> GetUniqueWords(string text)
         {
-            char[] separators = { '.', ',', ':', '!', '?' };
-
-            Regex reg = new Regex("[^a-zA-Z0-9]");
+            Regex reg = new Regex("[^a-zA-Zа-яА-Я]");
             string txt = reg.Replace(text, " ");
-
-            if (!withRegister) txt = txt.ToLower();
 
             return txt.Split(' ').OrderBy(x => x).Distinct();
         }
