@@ -45,6 +45,17 @@ namespace Ascon.Wildcard.ViewModels
             }
         }
 
+        private List<string> _resultWords;
+        public List<string> ResultWords
+        {
+            get => _resultWords;
+            set
+            {
+                _resultWords = value;
+                RaisePropertyChanged(nameof(ResultWords));
+            }
+        }
+
         #endregion
 
         #region COMMANDS
@@ -58,6 +69,11 @@ namespace Ascon.Wildcard.ViewModels
         }
 
         #region METHODS
+
+        private void GetWordsByPattern()
+        {
+
+        }
 
         private void SelectFile()
         {

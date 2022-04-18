@@ -13,13 +13,18 @@ namespace Ascon.Wildcard.Models
 
         public bool WithRegister { get; private set; }
 
-        public IEnumerable<string> UniqueWords { get; }
+        public IEnumerable<string> UniqueWords { get; private set; }
 
         public WildcardSearcher(string text, bool withRegister)
         {
             Text = text;
             WithRegister = withRegister;
             UniqueWords = GetUniqueWords(text, withRegister);
+        }
+
+        public WildcardSearcher()
+        {
+
         }
 
         public void AddWord(string word)
