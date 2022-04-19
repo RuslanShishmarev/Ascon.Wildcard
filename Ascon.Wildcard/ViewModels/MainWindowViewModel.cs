@@ -89,10 +89,10 @@ namespace Ascon.Wildcard.ViewModels
 
         #region METHODS
 
-        private void GetWordsByPattern()
+        private async void GetWordsByPattern()
         {            
             _wildcardSearcher.SetIsWithRegister(WithRegister);
-            ResultWords = _wildcardSearcher.SearchWords(UserPattern)?.ToList();
+            ResultWords = await Task.Run(() =>  _wildcardSearcher.SearchWords(UserPattern)?.ToList());
         }
 
         private void SelectFile()
@@ -106,32 +106,31 @@ namespace Ascon.Wildcard.ViewModels
             if (result == true)
             {
                 FilePath = dlg.FileName;
-
-               
+                
                 var encoding = Encoding.Default;
 
                 Stream fs = new FileStream(FilePath, FileMode.Open);
-                using (StreamReader sr = new StreamReader(fs, true))
-                    encoding = sr.CurrentEncoding;
+                using (StreamReader sr = new StreamReader(fs, true)) encoding = sr.CurrentEncoding;
 
-                using (StreamReader sr = new StreamReader(FilePath, encoding))
-                {
-                    _wildcardSearcher.SetText(sr.ReadToEnd());
-                    StartText = new string(_wildcardSearcher.Text.Take(100).ToArray()) + "...";
-                }
+                StartText = GetTextFromFile(encoding, FilePath, _wildcardSearcher);
 
                 if (StartText.Contains("�"))
                 {
                     Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                     var enc1251 = Encoding.GetEncoding(1251);
-                    using (StreamReader sr = new StreamReader(FilePath, enc1251))
-                    {
-                        _wildcardSearcher.SetText(sr.ReadToEnd());
-                        StartText = new string(_wildcardSearcher.Text.Take(100).ToArray()) + "...";
-                    }
+                    StartText = GetTextFromFile(enc1251, FilePath, _wildcardSearcher);
                 }
 
                 ResultWords?.Clear();
+            }
+        }
+
+        private string GetTextFromFile(Encoding encoding, string filePath, WildcardSearcher wildcardSearcher, int charCount = 100)
+        {
+            using (StreamReader sr = new StreamReader(filePath, encoding))
+            {
+                wildcardSearcher.SetText(sr.ReadToEnd());
+                return new string(wildcardSearcher.Text.Take(charCount).ToArray()) + "...";
             }
         }
 
