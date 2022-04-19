@@ -49,9 +49,11 @@ namespace Ascon.Wildcard.Models
 
         private bool IsWordEqualPattern(string pattern, string word)
         {
-            string patternForRegex = pattern.Replace("*", "\\" + "w*").Replace("?", ".");
+            if (!pattern.Contains("*") && !pattern.Contains("?")) return pattern == word;
 
-            Regex regex = new Regex(patternForRegex, !WithRegister ? RegexOptions.IgnoreCase : RegexOptions.None);
+            string patternForRegex = pattern.Replace("*", "(\\" + "w*)").Replace("?", "(.)");
+
+            Regex regex = new Regex(@patternForRegex, !WithRegister ? RegexOptions.IgnoreCase : RegexOptions.None);
             Match match = regex.Match(word);
 
             return match.Success;

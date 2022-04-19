@@ -9,8 +9,8 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="Окно программы"
-        Height="450" 
-        Width="500">
+        Height="450" MinHeight="300"
+        Width="500" MinWidth="200">
     <Window.Resources>
         <Brush x:Key="commonOrange">#c64f15</Brush>
         <Brush x:Key="commonGrayColor">#FF8D8D8D</Brush>
