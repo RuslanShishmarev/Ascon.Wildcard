@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Ascon.Wildcard.ViewModels
 {
@@ -22,6 +23,8 @@ namespace Ascon.Wildcard.ViewModels
         public string Rule_WithRegister => "Учитывать регистр";
         public string Button_SelectFile => "Выбрать файл";
         public string Button_SearchWords => "Найти слова";
+        public string Button_ShowUserWords => "Показать добавленные";
+        public string AddWordCommand => "Добавить в словарь";
         #endregion
 
         private string _filePath  = "Пуcто";
@@ -92,12 +95,25 @@ namespace Ascon.Wildcard.ViewModels
             }
         }
 
+        private string _selectedWord;
+        public string SelectedWord
+        {
+            get => _selectedWord;
+            set
+            {
+                _selectedWord = value;
+                RaisePropertyChanged(nameof(SelectedWord));
+            }
+        }
+
         #endregion
 
         #region COMMANDS
 
         public DelegateCommand SelectFileCommand { get; private set; }
         public DelegateCommand GetWordsByPatternCommand { get; private set; }
+        public DelegateCommand AddSelectedWordToDictCommand { get; private set; }
+        public DelegateCommand ShowSelectedWordsCommand { get; private set; }
 
         #endregion
 
@@ -105,6 +121,8 @@ namespace Ascon.Wildcard.ViewModels
         {
             SelectFileCommand = new DelegateCommand(SelectFile);
             GetWordsByPatternCommand = new DelegateCommand(GetWordsByPattern);
+            AddSelectedWordToDictCommand = new DelegateCommand(AddSelectedWordToDict);
+            ShowSelectedWordsCommand = new DelegateCommand(ShowSelectedWords);
             _wildcardSearcher = new WildcardSearcher(_withRegister);
         }
 
@@ -155,6 +173,25 @@ namespace Ascon.Wildcard.ViewModels
                 wildcardSearcher.SetText(sr.ReadToEnd());
                 return new string(wildcardSearcher.Text.Take(charCount).ToArray()) + "...";
             }
+        }
+
+        private void AddSelectedWordToDict()
+        {
+            if(SelectedWord != null)
+            {
+                _wildcardSearcher.AddWord(SelectedWord);
+                ShowMessage($"Слово '{SelectedWord}' добавлено в словарь");
+            }
+        }
+
+        private void ShowSelectedWords()
+        {
+            ResultWords = _wildcardSearcher.GetUserWords().ToList();
+        }
+
+        private void ShowMessage(string message)
+        {
+            MessageBox.Show(message);
         }
 
         #endregion

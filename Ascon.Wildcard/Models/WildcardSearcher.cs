@@ -7,6 +7,8 @@ namespace Ascon.Wildcard.Models
 {
     public class WildcardSearcher : IWildcardSearcher
     {
+        private (bool, string) USER_WORDS = (true, nameof(USER_WORDS));
+
         public bool IsReady => !string.IsNullOrEmpty(Text);
 
         public Dictionary<(bool, string), IEnumerable<string>> SearchedWords { get; private set; }
@@ -36,7 +38,14 @@ namespace Ascon.Wildcard.Models
 
         public void AddWord(string word)
         {
-            throw new NotImplementedException();
+            if(SearchedWords.ContainsKey(USER_WORDS)) 
+            {
+                var userWords = SearchedWords[USER_WORDS].Concat(new string[] { word });
+                SearchedWords[USER_WORDS] = userWords;
+                return;
+            }
+
+            SearchedWords[USER_WORDS] = new string[] { word };            
         }
 
         public IEnumerable<string> SearchWords(string pattern)
@@ -51,6 +60,11 @@ namespace Ascon.Wildcard.Models
                 SearchedWords[(WithRegister, pattern)] = words;
                 return words;
             }
+        }
+
+        public IEnumerable<string> GetUserWords()
+        {
+            return SearchedWords.ContainsKey(USER_WORDS) ? SearchedWords[USER_WORDS] : Array.Empty<string>();
         }
 
         public void Reset()

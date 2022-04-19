@@ -87,7 +87,18 @@
                 </Grid.RowDefinitions>
                 <TextBlock Text="{Binding WordsColumn}" Style="{StaticResource header}"/>
                 <ListBox Grid.Row="1" ItemsSource="{Binding ResultWords}" 
+                         SelectedItem="{Binding SelectedWord}"
                          Style="{StaticResource commonLB}">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="{Binding AddWordCommand}" 
+                                      Command="{Binding AddSelectedWordToDictCommand}"
+                                      IsEnabled="{Binding IsReady}"/>
+                            <MenuItem Header="{Binding Button_ShowUserWords}" 
+                                      Command="{Binding ShowSelectedWordsCommand}"
+                                      IsEnabled="{Binding IsReady}"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
                 </ListBox>
             </Grid>
             <Grid Grid.Column="1">
@@ -119,7 +130,7 @@
                 </Grid>
                 
                 <Button Grid.Row="4" Command="{Binding GetWordsByPatternCommand}" 
-                         Style="{StaticResource commonBtn}"
+                        Style="{StaticResource commonBtn}"
                         IsEnabled="{Binding IsReady}">
                     <Button.Content>
                         <TextBlock Text="{Binding Button_SearchWords}" Style="{StaticResource btnTxt}"/>
