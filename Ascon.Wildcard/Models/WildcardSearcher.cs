@@ -41,12 +41,18 @@ namespace Ascon.Wildcard.Models
             return UniqueWords?.Where(x => IsWordEqualPattern(pattern, x));
         }
 
+        public void Reset()
+        {
+            Text = string.Empty;
+            UniqueWords = Array.Empty<string>();
+        }
+
         private bool IsWordEqualPattern(string pattern, string word)
         {
             if (!pattern.Contains("*") && !pattern.Contains("?")) return pattern == word;
             if (!pattern.StartsWith("*")) pattern = "^" + pattern;
 
-            string patternForRegex = pattern.Replace("*", "(\\" + "w*)").Replace("?", "(.)");            
+            string patternForRegex = pattern.Replace("*", "(\\" + "w*)").Replace("?", "(.)") + "$";            
 
             Regex regex = new Regex(@patternForRegex, !WithRegister ? RegexOptions.IgnoreCase : RegexOptions.None);
             Match match = regex.Match(word);

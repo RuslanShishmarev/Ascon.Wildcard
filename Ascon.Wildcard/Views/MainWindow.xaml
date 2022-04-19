@@ -8,7 +8,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Окно программы"
+        Title="{Binding MainWndHeader}"
         Height="450" MinHeight="300"
         Width="500" MinWidth="200">
     <Window.Resources>
@@ -70,7 +70,7 @@
         </Grid.RowDefinitions>
         <Button Command="{Binding SelectFileCommand}" Style="{StaticResource commonBtn}">
             <Button.Content>
-                <TextBlock Text="Выбать файл" Style="{StaticResource btnTxt}"/>
+                <TextBlock Text="{Binding Button_SelectFile}" Style="{StaticResource btnTxt}"/>
             </Button.Content>
         </Button>
         <Grid Grid.Row="1">
@@ -85,7 +85,7 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Text="Слова" Style="{StaticResource header}"/>
+                <TextBlock Text="{Binding WordsColumn}" Style="{StaticResource header}"/>
                 <ListBox Grid.Row="1" ItemsSource="{Binding ResultWords}" 
                          Style="{StaticResource commonLB}">
                 </ListBox>
@@ -97,7 +97,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="30"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Управление" Style="{StaticResource header}"/>
+                <TextBlock Grid.Row="0" Text="{Binding WordsRules}" Style="{StaticResource header}"/>
                 <TextBlock Grid.Row="1" Text="{Binding StartText}" Style="{StaticResource commonTxt}"/>
                 
                 <Grid Grid.Row="2">
@@ -109,19 +109,20 @@
                         <RowDefinition Height="30"/>
                         <RowDefinition Height="30"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Паттерн" Style="{StaticResource commonTxt}"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding Rule_Pattern}" Style="{StaticResource commonTxt}"/>
                     <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding UserPattern}" 
                              Style="{StaticResource commonTB}"/>
 
-                    <TextBlock Grid.Row="1" Text="Учитывать регистр" Style="{StaticResource commonTxt}"/>
+                    <TextBlock Grid.Row="1" Text="{Binding Rule_WithRegister}" Style="{StaticResource commonTxt}"/>
                     <CheckBox  Grid.Row="1" Grid.Column="1" IsChecked="{Binding WithRegister}"
                                Style="{StaticResource commonChB}"/>
                 </Grid>
                 
-                <Button  Grid.Row="4" Command="{Binding GetWordsByPatternCommand}" 
-                         Style="{StaticResource commonBtn}">
+                <Button Grid.Row="4" Command="{Binding GetWordsByPatternCommand}" 
+                         Style="{StaticResource commonBtn}"
+                        IsEnabled="{Binding IsReady}">
                     <Button.Content>
-                        <TextBlock Text="Найти слова" Style="{StaticResource btnTxt}"/>
+                        <TextBlock Text="{Binding Button_SearchWords}" Style="{StaticResource btnTxt}"/>
                     </Button.Content>
                 </Button>
             </Grid>

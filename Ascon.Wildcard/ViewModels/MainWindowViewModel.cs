@@ -14,6 +14,16 @@ namespace Ascon.Wildcard.ViewModels
     {
         #region PROPS
 
+        #region VIEW PROPS
+        public string MainWndHeader => "Тестовое задание АСКОН";
+        public string WordsColumn => "Слова";
+        public string WordsRules => "Управление";
+        public string Rule_Pattern => "Паттерн";
+        public string Rule_WithRegister => "Учитывать регистр";
+        public string Button_SelectFile => "Выбрать файл";
+        public string Button_SearchWords => "Найти слова";
+        #endregion
+
         private string _filePath  = "Пуcто";
         public string FilePath
         {
@@ -71,6 +81,17 @@ namespace Ascon.Wildcard.ViewModels
 
         private WildcardSearcher _wildcardSearcher;
 
+        private bool _isReady = false;
+        public bool IsReady
+        {
+            get => _isReady;
+            set 
+            { 
+                _isReady = value;
+                RaisePropertyChanged(nameof(IsReady));
+            }
+        }
+
         #endregion
 
         #region COMMANDS
@@ -97,6 +118,8 @@ namespace Ascon.Wildcard.ViewModels
 
         private void SelectFile()
         {
+            _wildcardSearcher.Reset();
+
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             dlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -119,6 +142,7 @@ namespace Ascon.Wildcard.ViewModels
                     Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
                     var enc1251 = Encoding.GetEncoding(1251);
                     StartText = GetTextFromFile(enc1251, FilePath, _wildcardSearcher);
+                    IsReady = _wildcardSearcher.IsReady;
                 }
 
                 ResultWords?.Clear();
