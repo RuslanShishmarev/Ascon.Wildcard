@@ -15,12 +15,6 @@ namespace Ascon.Wildcard.Models
 
         public IEnumerable<string> UniqueWords { get; private set; }
 
-        public WildcardSearcher(string text, bool withRegister)
-        {
-            Text = text;
-            WithRegister = withRegister;
-        }
-
         public WildcardSearcher(bool withRegister)
         {
             WithRegister = withRegister;
@@ -50,19 +44,15 @@ namespace Ascon.Wildcard.Models
         private bool IsWordEqualPattern(string pattern, string word)
         {
             if (!pattern.Contains("*") && !pattern.Contains("?")) return pattern == word;
+            if (!pattern.StartsWith("*")) pattern = "^" + pattern;
 
-            string patternForRegex = pattern.Replace("*", "(\\" + "w*)").Replace("?", "(.)");
+            string patternForRegex = pattern.Replace("*", "(\\" + "w*)").Replace("?", "(.)");            
 
             Regex regex = new Regex(@patternForRegex, !WithRegister ? RegexOptions.IgnoreCase : RegexOptions.None);
             Match match = regex.Match(word);
 
             return match.Success;
         }
-
-        //private bool IsWordEqualPatternMy(string pattern, string word)
-        //{
-        //    if (!pattern.Contains('*') && !pattern.Contains('?')) return pattern == word;
-        //}
 
         private IEnumerable<string> GetUniqueWords(string text)
         {

@@ -107,13 +107,28 @@ namespace Ascon.Wildcard.ViewModels
             {
                 FilePath = dlg.FileName;
 
-                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-                var enc1251 = Encoding.GetEncoding(1251);
+               
+                var encoding = Encoding.Default;
 
-                using (StreamReader sr = new StreamReader(FilePath, Encoding.Default))
+                Stream fs = new FileStream(FilePath, FileMode.Open);
+                using (StreamReader sr = new StreamReader(fs, true))
+                    encoding = sr.CurrentEncoding;
+
+                using (StreamReader sr = new StreamReader(FilePath, encoding))
                 {
                     _wildcardSearcher.SetText(sr.ReadToEnd());
                     StartText = new string(_wildcardSearcher.Text.Take(100).ToArray()) + "...";
+                }
+
+                if (StartText.Contains("�"))
+                {
+                    Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+                    var enc1251 = Encoding.GetEncoding(1251);
+                    using (StreamReader sr = new StreamReader(FilePath, enc1251))
+                    {
+                        _wildcardSearcher.SetText(sr.ReadToEnd());
+                        StartText = new string(_wildcardSearcher.Text.Take(100).ToArray()) + "...";
+                    }
                 }
 
                 ResultWords?.Clear();
