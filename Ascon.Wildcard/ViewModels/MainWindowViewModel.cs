@@ -118,8 +118,6 @@ namespace Ascon.Wildcard.ViewModels
 
         private void SelectFile()
         {
-            _wildcardSearcher.Reset();
-
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
 
             dlg.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -128,6 +126,8 @@ namespace Ascon.Wildcard.ViewModels
 
             if (result == true)
             {
+                _wildcardSearcher.Reset();
+
                 FilePath = dlg.FileName;
                 
                 var encoding = Encoding.Default;
@@ -144,7 +144,6 @@ namespace Ascon.Wildcard.ViewModels
                     StartText = GetTextFromFile(enc1251, FilePath, _wildcardSearcher);
                     IsReady = _wildcardSearcher.IsReady;
                 }
-
                 ResultWords?.Clear();
             }
         }

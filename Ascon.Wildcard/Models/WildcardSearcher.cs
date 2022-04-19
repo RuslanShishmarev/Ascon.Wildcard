@@ -9,6 +9,8 @@ namespace Ascon.Wildcard.Models
     {
         public bool IsReady => !string.IsNullOrEmpty(Text);
 
+        public Dictionary<(bool, string), IEnumerable<string>> SearchedWords { get; private set; }
+
         public string Text { get; private set; }
 
         public bool WithRegister { get; private set; }
@@ -18,6 +20,7 @@ namespace Ascon.Wildcard.Models
         public WildcardSearcher(bool withRegister)
         {
             WithRegister = withRegister;
+            SearchedWords = new Dictionary<(bool, string), IEnumerable<string>>();
         }
 
         public void SetIsWithRegister(bool withRegister)
@@ -38,13 +41,23 @@ namespace Ascon.Wildcard.Models
 
         public IEnumerable<string> SearchWords(string pattern)
         {
-            return UniqueWords?.Where(x => IsWordEqualPattern(pattern, x));
+            if (SearchedWords.ContainsKey((WithRegister, pattern))) 
+            { 
+                return SearchedWords[(WithRegister, pattern)]; 
+            }
+            else
+            {
+                var words = UniqueWords?.Where(x => IsWordEqualPattern(pattern, x));
+                SearchedWords[(WithRegister, pattern)] = words;
+                return words;
+            }
         }
 
         public void Reset()
         {
             Text = string.Empty;
             UniqueWords = Array.Empty<string>();
+            SearchedWords?.Clear();
         }
 
         private bool IsWordEqualPattern(string pattern, string word)
